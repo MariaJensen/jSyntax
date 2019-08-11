@@ -1,0 +1,50 @@
+%YAML 1.2
+---
+
+file_extensions:
+  - js
+  
+scope: StringLiteral
+hidden: true
+
+contexts: 
+  main: 
+    - match: '"'
+      scope: StringLiteral.punctuation
+      push: characters
+      with_prototype: 
+        - match: '\x{000A}|\x{000D}|\x{2028}|\x{2029}'
+          scope: Error
+          pop: true
+        - match: '"'
+          scope: StringLiteral.punctuation
+          pop: true
+        
+    - match: '\x{0027}'
+      scope: StringLiteral.punctuation
+      push: characters
+      with_prototype: 
+        - match: '\x{000A}|\x{000D}|\x{2028}|\x{2029}'
+          scope: Error
+          pop: true
+        - match: '\x{0027}'
+          scope: StringLiteral.punctuation
+          pop: true
+
+  characters: 
+    - meta_scope: StringLiteral
+    - meta_content_scope: StringLiteral.characters
+    - match: '(\\)(\x{000A}|\x{000D}(?!\x{000A})|\x{2028}|\x{2029}|\x{000D}\x{000A})'
+      scope: StringLiteral.LineContinuation
+    - match: '\\x\h{2}'
+      scope: StringLiteral.escape
+    - match: '\\u\h{4}|\\u\{\h{1,}\}'
+      scope: StringLiteral.escape
+    - match: '\\0(?!\d)'
+      scope: StringLiteral.escape
+    - match: '\\(\x{0027}|"|\\|b|f|n|r|t|v)'
+      scope: StringLiteral.escape
+    - match: '\\[1-9]'
+      scope: Error
+
+
