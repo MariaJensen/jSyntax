@@ -1,0 +1,67 @@
+%YAML 1.2
+---
+
+file_extensions:
+  - js
+  
+scope: NumericLiteral
+hidden: true
+name: NumericLiteral
+
+variables: 
+  DecimalIntegerLiteral: '0|[1-9]\d{0,}'
+  DecimalDigits: '\d{1,}'
+  ExponentPart: '(e|E)((?:\+|-){0,1})(\d{1,})'
+
+contexts:
+  main:
+    - meta_scope: NumericLiteral
+
+    # BinaryIntegerLiteral:
+
+    - match: '(0(?:b|B))([0-1]{1,})' 
+      captures: 
+        1: NumericLiteral.punctuation
+        2: NumericLiteral.digits 
+
+    # OctalIntegerLiteral:
+
+    - match: '(0(?:o|O))([0-7]{1,})'
+      captures: 
+        1: NumericLiteral.punctuation  
+        2: NumericLiteral.digits 
+
+    # HexIntegerLiteral:
+
+    - match: '(0(?:x|X))(\h{1,})'
+      captures:
+        1: NumericLiteral.punctuation 
+        2: NumericLiteral.digits
+
+    # DecimalIntegerLiteral: 
+
+    - match: '({{DecimalIntegerLiteral}})(\.)({{DecimalDigits}}){0,1}(?:{{ExponentPart}}){0,1}'
+      captures: 
+        1: NumericLiteral.digits 
+        2: NumericLiteral.punctuation 
+        3: NumericLiteral.digits
+        4: NumericLiteral.punctuation 
+        5: NumericLiteral.punctuation 
+        6: NumericLiteral.digits
+
+    - match: '(\.)({{DecimalDigits}})(?:{{ExponentPart}}){0,1}'
+      captures: 
+        1: NumericLiteral.punctuation 
+        2: NumericLiteral.digits
+        3: NumericLiteral.punctuation 
+        4: NumericLiteral.punctuation 
+        5: NumericLiteral.digits
+
+    - match: '({{DecimalIntegerLiteral}})(?:{{ExponentPart}}){0,1}'
+      captures: 
+        1: NumericLiteral.digits
+        2: NumericLiteral.punctuation 
+        3: NumericLiteral.punctuation 
+        4: NumericLiteral.digits
+    
+    
