@@ -1,0 +1,35 @@
+%YAML 1.2
+---
+
+file_extensions:
+  - js
+  
+scope: Comment
+hidden: true
+name: Comment
+
+variables: 
+  LineTerminator: '[\x{000A}\x{000D}\x{2028}\x{2029}]'
+
+contexts: 
+  main:
+    - match: '/\*'
+      scope: Comment.punctuation
+      push: characters
+      with_prototype: 
+        - match: '\*/'
+          scope: Comment.punctuation
+          pop: true
+
+    - match: '//'
+      scope: Comment.punctuation
+      push: characters
+      with_prototype: 
+        - match: '[\x{000A}\x{000D}\x{2028}\x{2029}]'
+          pop: true
+
+  characters: 
+    - meta_scope: Comment
+    - meta_content_scope: Comment.characters
+
+ 
