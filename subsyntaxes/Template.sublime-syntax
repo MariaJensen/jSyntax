@@ -1,0 +1,55 @@
+%YAML 1.2
+---
+
+file_extensions:
+  - js
+  
+scope: Template
+hidden: true
+name: Template
+
+variables: 
+  LineTerminator: '[\x{000A}\x{000D}\x{2028}\x{2029}]'
+
+  LineTerminatorSequence: '\x{000A}|\x{000D}(?!\x{000A})|\x{2028}|\x{2029}|\x{000D}\x{000A}'
+
+  SingleEscapeCharacter: '[\x{0027}\x{0022}\\bfnrtv]'
+
+  EscapeCharacter: '[{{SingleEscapeCharacter}}[0-9]xu]'
+
+  NonEscapeCharacter: '[^{{LineTerminator}}{{EscapeCharacter}}]'
+
+contexts: 
+  main: 
+    - match: '`'
+      scope: Template.punctuation 
+      push: [Template, characters]
+
+  embeddedCode: 
+    # TODO: include relevant contexts (js main scope)
+    - meta_content_scope: embeddedCode
+    - match: '\}'
+      scope: Template.punctuation 
+      set: characters
+    - match: '`'
+      scope: Template.punctuation 
+      push: [Template, characters]
+  
+
+  Template: 
+    - meta_scope: Template 
+    - match: '\$\{'
+      scope: Template.punctuation 
+      push: embeddedCode
+    - match: '`'
+      scope: Template.punctuation 
+      pop: true
+  
+  characters: 
+    - meta_content_scope: Template.characters 
+    - match: '(?=\$\{)'
+      pop: true
+    - match: '(?=`)'
+      pop: true
+
+  
