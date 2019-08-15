@@ -18,15 +18,15 @@ variables:
 contexts:
   main:
     - match: '0(b|B)'
-      scope: NumericLiteral NumericLiteral.punctuation red
+      scope: NumericLiteral NumericLiteral.punctuation 
       push: BinaryDigits  
 
     - match: '0(o|O)'
-      scope: NumericLiteral NumericLiteral.punctuation green
+      scope: NumericLiteral NumericLiteral.punctuation 
       push: OctalDigits
 
     - match: '0(x|X)'
-      scope: NumericLiteral NumericLiteral.punctuation violet
+      scope: NumericLiteral NumericLiteral.punctuation 
       push: HexDigits
 
     - match: '(\.)({{DecimalDigits}}){{ExponentPart}}({{IdentifierStart}})'
@@ -147,7 +147,7 @@ contexts:
 
   HexDigits: 
     - match: '\h'
-      scope: violet
+      scope: NumericLiteral.digits 
     - match: '{{IdentifierStart}}'
       scope: Error
       pop: true
@@ -156,7 +156,7 @@ contexts:
 
   OctalDigits: 
     - match: '[0-7]'
-      scope: NumericLiteral NumericLiteral.digits green
+      scope: NumericLiteral.digits 
     - match: '{{IdentifierStart}}'
       scope: Error
       pop: true
@@ -168,7 +168,7 @@ contexts:
 
   BinaryDigits: 
     - match: '[01]' 
-      scope: NumericLiteral NumericLiteral.digits red
+      scope: NumericLiteral.digits 
     - match: '{{IdentifierStart}}'
       scope: Error
       pop: true
